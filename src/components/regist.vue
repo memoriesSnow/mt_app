@@ -73,6 +73,7 @@
 
 <script>
 import { listObj } from "../server/index.js";
+import { Toast } from 'vant';
 export default {
   data() {
     return {
@@ -97,6 +98,8 @@ export default {
       };
       listObj.registAccount(parmas).then((res) => {
         console.log(res);
+        Toast('注册成功');
+        this.$router.push('login');
       });
     },
     validater() {
@@ -104,16 +107,13 @@ export default {
       let passWord = this.passWord.match(this.passwordReg);
       let email = this.email.match(this.emailReg);
       if (username && passWord && email) {
-        this.passWord == this.repeatPassword ? this.commitInfo() : alert('密码不太一样');
+        this.passWord == this.repeatPassword ? this.commitInfo() : Toast('密码不太一样');
       } else {
-        if(!username) alert("用户名格式错误")
-        if(!passWord) alert('密码格式错误')
-        if(!email) alert('邮箱错误')
+        if(!username) Toast("用户名格式错误")
+        if(!passWord) Toast('密码格式错误')
+        if(!email) Toast('邮箱错误')
       }
     },
-  },
-  mounted() {
-
   },
 };
 </script>
@@ -168,6 +168,7 @@ export default {
     flex: 1;
     height: 0.5rem;
     line-height: 0.5rem;
+    text-align:center;
   }
 }
 .content {

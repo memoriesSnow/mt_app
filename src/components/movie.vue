@@ -1,21 +1,19 @@
 <template>
     <div class ="movie">
-        <div class =""></div>
-                    <component :is="selected"></component>
+        <!-- <div class =""></div>
+                    <component :is="selected"></component> -->
+        <router-view/>
         <div class ="bottom_navbar">
             <van-tabbar v-model="active">
-                <van-tabbar-item icon="fire" @click="selection('neko_eyes')">电影</van-tabbar-item>
-                <van-tabbar-item icon="live" @click="selection('cinema')">影院</van-tabbar-item>
-                <van-tabbar-item icon="map-marked" @click="selection('mine')">我的</van-tabbar-item>
+                <van-tabbar-item icon="fire" to="/neko_eyes">电影</van-tabbar-item>
+                <van-tabbar-item icon="live" to="/cinema">影院</van-tabbar-item>
+                <van-tabbar-item icon="map-marked" to="/mine">我的</van-tabbar-item>
             </van-tabbar>
         </div>
     </div>
 </template>
 
 <script>
-import neko_eyes from './movies/neko_eyes.vue'
-import cinema from './movies/cinema.vue'
-import mine from './movies/mine.vue'
 export default {
     data() {
         return {
@@ -28,9 +26,6 @@ export default {
             this.selected = word
         }
     },
-    components:{
-        neko_eyes,cinema,mine
-    }
 }
 </script>
 

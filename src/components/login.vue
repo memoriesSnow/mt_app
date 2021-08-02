@@ -20,6 +20,8 @@
 
 <script>
 import { listObj } from '../server'
+import { Toast } from 'vant'
+import Cookie from '../utils/cookie'
 export default {
     data(){
         return{
@@ -35,8 +37,42 @@ export default {
             }
             listObj.loginAccount(params).then(res=>{
                 console.log(res);
+                if(res !='登陆成功'){
+                    Toast('用户名或密码错误')   
+                    return
+                }
+                this.$router.replace('user');
+                this.saveAccount();
+                Toast('登录成功')
             })
+        },
+        saveAccount(){
+            let params = {
+                name:'username',
+                value:this.username,
+                // expires:7 * 24 * 60 * 60
+                expires:600
+            }
+            let params1 = {
+                name:'password',
+                value:this.password,
+                // expires:7 * 24 * 60 * 60
+                expires:600
+            }
+            Cookie.set(params);
+            Cookie.set(params1);
         }
+    },
+    mounted(){
+        /* Cookie.set({
+            name:'test',
+            value:1,
+            expires:30
+        }) */
+        /* this.a = Cookie.get("test")
+        console.log(this.a)
+        let obj = Cookie.getAll();
+        console.log(obj) */
     }
 }
 </script>

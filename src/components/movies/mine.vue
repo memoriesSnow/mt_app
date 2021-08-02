@@ -1,6 +1,6 @@
 <template>
   <div class ="mine">
-      mine
+      个人中心
   </div>
 </template>
 

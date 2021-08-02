@@ -3,38 +3,38 @@
     <div class="top-rated-wrap">
       <p class="title">最受好评电影</p>
       <div class="top-rated-list">
-        <div class="top-rated-item" v-for="item in 10" :key="item"><!-- 这里for -->
+        <div class="top-rated-item" v-for="item in rankMovieList" :key="item.id"><!-- 这里for -->
             <div class ="default-img-bg">
-                <img src="https://p1.meituan.net/170.230/movie/6876f0a4db61cab652fdc3d3ed14e94c4924473.jpg" />
+                <img :src="item.img"/>
                 <span class ="wish-bg"></span>
                 <span class ="score">
                     观众评分&nbsp;&nbsp;
-                    <span class ="rated-score">9.5</span>
+                    <span class ="rated-score">{{ item.rank }}</span>
                 </span>
             </div>
-            <h5 class ="line-ellipsis">中国先生</h5>
+            <h5 class ="line-ellipsis">{{ item.title }}</h5>
         </div>
       </div>
     </div>
     <div class="list-wrap">
-        <div class="item" v-for="item in 10" :key="item">
+        <div class="item" v-for="item in movieList" :key="item.img">
             <div class ="main-block">
                 <div class ="imgBox">
-                    <img src="https://p0.meituan.net/movie/cba20984e8e4423598913077e515b6121686728.jpg@1l_1e_1c_128w_180h"/>
+                    <img :src="item.img"/>
                 </div>
                 <div class ="movieInfo">
                     <div class ="content">
                         <div class ="movie_title">
-                            <div class ="mot">白蛇2：青蛇劫起</div>
+                            <div class ="mot">{{ item.title }}</div>
                             <span class ="version"></span>
                         </div>
                         <div class ="col">
                             <div class ="scored">
                                 <span class ="score-suffix">观众评</span>
-                                <span class ="grade">9.2</span>
+                                <span class ="grade">{{ item.rank }}</span>
                             </div>
-                            <div class ="actor">主演: 唐小喜,张福正,魏超</div>
-                            <div class ="show-info">今天35家影院放映374场</div>
+                            <div class ="actor">{{ item.protagonist }}</div>
+                            <div class ="show-info">{{ item.time }}</div>
                         </div>
                     </div>
                     <div class ="button">
@@ -48,7 +48,31 @@
 </template>
 
 <script>
-export default {};
+import { listObj } from '../../../server/index.js'
+export default {
+    data(){
+        return{
+            movieList:[],
+            rankMovieList:[]
+        }
+    },
+    methods:{
+        getMovie(){
+            listObj.getMovieList().then(res=>{
+                this.movieList = res;
+                console.log(this.movieList);
+                this.rankMovies();
+            })
+        },
+        rankMovies(){
+            this.rankMovieList = this.movieList.sort((a,b) => b.rank-a.rank)
+            console.log(this.rankMovieList)
+        }
+    },
+    mounted(){
+        this.getMovie(); 
+    }
+}
 </script>
 
 <style lang="less" scoped>
@@ -172,6 +196,10 @@ export default {};
         font-weight: 700;
         padding-right: .05rem;
         flex-shrink: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 1.5rem;
     }
     .version{
         width:.43rem;

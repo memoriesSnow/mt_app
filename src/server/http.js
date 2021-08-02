@@ -2,7 +2,7 @@
 import http from 'axios';
 import qs from 'qs';
 
-http.defaults.baseURL = 'http://192.168.110.75:5000';
+http.defaults.baseURL = 'http://192.168.110.50:5000'
 http.defaults.timeout = 4000;
 
 http.interceptors.request.use(config =>{

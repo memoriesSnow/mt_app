@@ -15,7 +15,7 @@
             </a>
           </div>
           <div class ="nav-wrap-right">
-            <a @click="toLogin">
+            <a @click="toUser">
               <span>
                 <van-icon name="contact" size=".25rem" color="#FF4B10" />
               </span>
@@ -29,12 +29,12 @@
           </div>
         </div>
         <div class ="hot-areas-wrapper">
-          <div class="hot-area-item-wrapper" v-for="(item,index) in hotAreaList" :key="index"><!-- 在这循环 -->
+          <div class="hot-area-item-wrapper" v-for="(item,index) in hotAreaList" :key="index">
             <a href="#">
               <div class ="image-wrapper">
                 <img :src="item.hot_pic"/>
               </div>
-              <span class ="hot-area-name">{{ item.hot_name}}</span>
+              <span class ="hot-area-name">{{ item.hot_name }}</span>
             </a>
           </div>
         </div>
@@ -54,34 +54,44 @@
             </a>
           </div>
           <div class ="deal-container">
-            <div class ="list"> <!-- 这里for -->
+            <div class ="list" v-for="item in shopList" :key="item.id" @click="toDetails(item.id)"> <!-- 这里for -->
               <div class ="poi-info-wrapper"> 
                 <div class ="image-wrapper">
                   <div class ="imgbox">
-                    <img src="//p1.meituan.net/biztone/2e5610e337d0a30c2ecf9cf00aa0f266162461.jpg@320w_320h_1e_1c"/>
+                    <img :src="item.img"/>
                   </div>
                 </div>
                 <div class ="poi-info">
-                  <div class ="poi-name">蜜雪冰城(康庄店)</div>
+                  <div class ="poi-name">{{ item.title }}</div>
                   <div class ="price-wrapper">
                     <div class ="star_container">
-                      <span class = "stars">
+                      <!-- <span class = "stars">
                         <span class ="star_item"><i class ="icon"></i></span>
                         <span class ="star_item"><i class ="icon"></i></span>
                         <span class ="star_item"><i class ="icon"></i></span>
                         <span class ="star_item"><i class ="icon"></i></span>
                         <span class ="star_item"><i class ="icon"></i></span>
-                      </span>
+                      </span> -->
+                      <van-rate
+                        v-model="item.rank"
+                        size=".14rem"
+                        color="#FF4B10"
+                        void-icon="star"
+                        void-color="#eee"
+                        gutter=".01rem"
+                        allow-half
+                        readonly
+                      />
                     </div>
-                    <span class ="price">￥6/人</span>
+                    <span class ="price">{{ item.price }}元/人</span>
                     <div class ="location">
-                      <span class="area">新朝阳</span>5.1km
+                      <span class="area">{{ item.distance }}</span>
                     </div>
                   </div>
                   <div class ="cate-wrapper">
-                    <span class ="cate-name">奶茶/果汁</span>
-                    <span class ="smart-tag">新朝阳甜点饮品第2名</span>
-                    <span class ="smart-tag">回头客多</span>
+                    <span class ="cate-name">{{ item.category }}</span>
+                    <!-- <span class ="smart-tag">新朝阳甜点饮品第2名</span>
+                    <span class ="smart-tag">回头客多</span> -->
                   </div>
                   <div class ="service-tags"></div>
                 </div>
@@ -89,11 +99,11 @@
               <div class ="deal-info-wrapper">
                 <div class ="preferential">
                   <div class ="promotion-wrapper">
-                    <span class="promotion">立减6.89</span>
+                    <span class="promotion">{{ item.juan }}</span>
                   </div>
                   <img class ="icon" src="https://p1.meituan.net/travelcube/734c7f818631a0aa8e49a814b90b1b771242.png"  />
                   <span class ="contents">
-                    5 份珍珠奶茶27.5元，2元魔天/华夫冰淇淋，3元柠檬水，3元四季春茶，3元红茶，3元绿茶，4.9元蜜桃四季春，5元珍珠奶茶（中杯），5元芒果雪王大圣代，6元黑糖珍珠大圣代，6元草莓摇摇奶昔，6.66元666满杯百香果，6.9元三拼霸霸奶茶，9元芝士奶盖绿茶，11.9元必点人气榜单套餐，5 份三拼霸霸奶茶（大杯）34.5元，11 份柠檬水39.93元
+                    {{ item.tuan }}
                   </span>
                 </div>
               </div>
@@ -150,15 +160,29 @@ export default {
   methods:{
     getShopList(){
       listObj.getFoodlist().then(res=>{
+        res.sort((a,b)=>b.rank-a.rank)
+        this.shopList = res;
         console.log(res);
       })
     },
-    toLogin(){
-      this.$router.push('login')
+    toUser(){
+      this.$router.push('user')
+    },
+    toDetails(id){
+      this.$router.push({
+        path:'/food_details',
+        name:'FoodDetail',
+        /* params:{
+          id
+        }, */
+        query:{
+          id
+        }
+      })
     }
   },
   mounted(){
-    // this.getShopList();
+    this.getShopList();
   }
 }
 </script>
@@ -459,7 +483,6 @@ export default {
   }
 }
 .deal-info-wrapper{
-  padding: 0.02rem 0 0.07rem 0;
   .preferential{
     margin: 0.1rem 0;
     display: -webkit-box;

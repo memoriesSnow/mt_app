@@ -1,8 +1,4 @@
 import http from './http';
-// 专门写details组件的请求接口
-// const aaa ='http://152.136.97.184:3000'
-
-// const baseURL = 'http://192.168.110.27:5000'
 
 export const listObj = {
 //  猜你喜欢页面数据
@@ -12,9 +8,13 @@ export const listObj = {
 //  登录页面接口
     loginAccount: (content) => http.post(`/login`,content),
 //  美食页面数据接口
-    getFoodlist: () => http.get('/food')
-
-
+    getFoodlist: () => http.get('/food'),
+//  美食详情接口
+    getFoodDetail: (id) => http.get(`/fooddetail?id=${id}`),
+//  电影页面数据接口
+    getMovieList: () => http.get('/movies'),
+//  影院数据接口
+    getCinemaList: () => http.get('/cinema')
     /* getloop:() => http.get(`${aaa}/getlunbo`),
     
     comment:(a,content) => http.post(`/postcomment/${a}`,{content}),

@@ -1,20 +1,22 @@
 <template>
   <div class ="neko_eyes">
-      <div class ="navbar">
-        <van-nav-bar
-            title="猫眼电影"
-            left-arrow
-            @click-left="onClickLeft"
-        />
-      </div>
-      <div class ="tabbar">
-            <div class ="tabbar_container">
-                <van-tabs v-model="active" sticky @click="change" line-width="1rem" :border="false">
-                    <van-tab title="正在热映"></van-tab>
-                    <van-tab title="即将上映"></van-tab>
-                </van-tabs>
-            </div>
-      </div>
+      <van-sticky>
+        <div class ="navbar">
+            <van-nav-bar
+                title="猫眼电影"
+            />
+        </div>
+      </van-sticky>
+      <van-sticky :offset-top="50">
+        <div class ="tabbar">
+                <div class ="tabbar_container">
+                    <van-tabs v-model="active" sticky @click="change" line-width="1rem" :border="false">
+                        <van-tab title="正在热映"></van-tab>
+                        <van-tab title="即将上映"></van-tab>
+                    </van-tabs>
+                </div>
+        </div>
+      </van-sticky>
       <div class ="content">
           <hotPlay v-show="flag=='正在热映'"/>
           <willPlay v-show="flag=='即将上映'"/>
@@ -29,7 +31,8 @@ export default {
     data(){
         return{
             active:'',
-            flag:'正在上映'
+            flag:'正在热映',
+            movieList:[]
         }
     },
     components:{
@@ -41,12 +44,8 @@ export default {
             this.flag = title;
             console.log(this.flag)
         },
-        onClickLeft(){
-            window.history.back()
-        }
     },
     mounted(){
-        this.change(null,'正在热映')
     }
 }
 </script>
@@ -60,6 +59,8 @@ export default {
 .tabbar{
     display:flex;
     justify-content: center;
+    width:100%;
+    background:#fff;
     .tabbar_container{
         width:2.1rem;
         background:blue;
@@ -68,4 +69,9 @@ export default {
 .content{
     width:100%;
 }
+/deep/.van-tab__text--ellipsis{
+    font-size: .15rem;
+    font-weight: 700;
+}
+
 </style>

@@ -2,7 +2,7 @@
   <div class ="homepage">
       <header class ="navbar">
           <div class ="nav_left">
-              <router-link class="link" to ="www.baidu.com">
+              <router-link class="link" to ="/">
                   <span class="nav_city">
                       廊坊
                       <div class ="space"></div>
@@ -17,7 +17,7 @@
               </div>
           </div>
           <div class ="nav_right">
-              <router-link class ="login" to ="login">
+              <router-link class ="login" to ="user">
                   <span class ="nav_btn">
                       <img class ="icon_mine" src="https://p0.meituan.net/travelcube/641521461179df7cfb88738dd1ea11ec1031.png"/>
                   </span>
@@ -41,10 +41,10 @@
       <div class ="menu_list">
           <div class ="menu_box">
               <div class ="menu_item" v-for="(item,index) in menuList" :key="index">
-                  <a class ="menu_link" :href="item.link" target ="_blank">
+                  <router-link class ="menu_link" :to="item.path">
                       <p class ="menu_pic"><img :src="item.pic"/></p>
                       <p class ="menu_name">{{ item.name }}</p>
-                  </a>
+                  </router-link>
               </div>
           </div>
       </div>
@@ -91,61 +91,65 @@
 
 <script>
 import guesslike from './views/guesslike.vue'
+import Cookie from './utils/cookie'
+import { listObj } from './server/index.js'
 export default {
     data(){
         return{
             menuList:[
                 {
-                    link:'//meishi.meituan.com/i/?ci=106',
+                    path:'food',
                     pic:require('./assets/美食.png'),
                     name:'美食'
                 },
                 {
-                    link:"//m.maoyan.com/imeituan/?_v_=yes&my_traffic_sources=group&ci=106",
+                    path:"movie",
                     pic:require('./assets/猫眼电影.png'),
                     name:'猫眼电影'
                 },
                 {
-                    link:'//meishi.meituan.com/i/?ci=106',
+                    path:'hotel',
                     pic:require('./assets/酒店.png'),
                     name:'酒店'
                 },
                 {
-                    link:'//meishi.meituan.com/i/?ci=106',
+                    path:'relax',
                     pic:require('./assets/休闲娱乐.png'),
                     name:'休闲娱乐'
                 },
                 {
-                    link:'//meishi.meituan.com/i/?ci=106',
+                    path:'buy_food',
                     pic:require('./assets/外卖.png'),
                     name:'外卖'
                 },
                 {
-                    link:'//meishi.meituan.com/i/?ci=106',
+                    path:'KTV',
                     pic:require('./assets/KTV.png'),
                     name:'KTV'
                 },
                 {
-                    link:'//meishi.meituan.com/i/?ci=106',
+                    path:'travel',
                     pic:require('./assets/周边游.png'),
                     name:'周边游'
                 },
                 {
-                    link:'//meishi.meituan.com/i/?ci=106',
+                    path:'beauty',
                     pic:require('./assets/丽人.png'),
                     name:'丽人'
                 },
                 {
-                    link:'//meishi.meituan.com/i/?ci=106',
+                    path:'mom',
                     pic:require('./assets/母婴亲子.png'),
                     name:'母婴亲子'
                 },
                 {
-                    link:'//meishi.meituan.com/i/?ci=106',
+                    path:'all',
                     pic:require('./assets/全部分类.png'),
                     name:'全部分类'
                 },
-            ]
+            ],
+            username:'',
+            password:''
         }
     },
     methods:{
@@ -154,17 +158,47 @@ export default {
         },
         regist(){
             this.$router.push('regist')
+        },
+        freeLogin(){
+            this.username = Cookie.get('username')
+            this.password = Cookie.get('password')
+            console.log(this.username);
+            console.log(this.password);
+            let params = {
+                userName:this.username,
+                password:this.password
+            }
+            if(this.username && this.password){
+                listObj.loginAccount(params).then(()=>{
+                    this.saveAccount();
+                })
+            }
+        },
+        saveAccount(){
+            let params = {
+                name:'username',
+                value:this.username,
+                // expires:7 * 24 * 60 * 60
+                expires:600
+            }
+            let params1 = {
+                name:'password',
+                value:this.password,
+                // expires:7 * 24 * 60 * 60
+                expires:600
+            }
+            Cookie.set(params);
+            Cookie.set(params1);
         }
+    },
+    mounted(){
+        this.freeLogin();
     },
     components:{guesslike}
 }
 </script>
 
 <style lang="less" scoped>
-
-
-
-
 .homepage{
     background:#f0efed;
 }
@@ -184,6 +218,7 @@ export default {
     display:inline-block;
     height:100%;
     width:100%;
+    text-align:center;
 }
 .nav_city{
     vertical-align: middle;
